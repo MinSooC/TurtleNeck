@@ -7,6 +7,7 @@ import playsound
 import get_musics
 import get_videos
 import search_google
+import sports
 import weather
 
 import face_detection
@@ -35,7 +36,7 @@ def speak(r):
         except:
             print('알 수 없는 오류가 발생했습니다.')
 
-def speak_video(r):
+def speak_detail(r):
     while True:
         with sr.Microphone() as source:
             print('이제 검색어를 입력해주세요')
@@ -62,10 +63,11 @@ def get_valid_time():
         try:
             hours = int(input('시간을 숫자로 입력해주세요(0-23): '))
             minutes = int(input('분을 숫자로만 입력해주세요(0-59): '))
-            if hours < 0 or hours > 23 or minutes < 0 or minutes > 59:
+            seconds = int(input('초를 숫자로만 입력해주세요(0-59): '))
+            if hours < 0 or hours > 23 or minutes < 0 or minutes > 59 or seconds < 0 or seconds > 59:
                 raise ValueError('올바르게 입력되지 않았습니다.')
 
-            return (hours, minutes)
+            return (hours, minutes, seconds)
 
         except ValueError as e:
             print(e)
@@ -88,6 +90,7 @@ r = sr.Recognizer()
 while True:
     keyword = speak(r)
 
+    # TOP100 음악 재생
     if ('음악' in keyword or '노래' in keyword) and '틀어' in keyword:
         text = '음악을 검색합니다.'
         print(text)
@@ -95,26 +98,44 @@ while True:
         playsound.playsound('mp3/music_search.mp3')
         get_musics.play_music()
 
+    # 동영상 검색
     elif '영상' in keyword and '틀어' in keyword:
         text = '동영상을 검색합니다. 검색어를 입력해주세요.'
         print(text)
         # get_tts(text, 'video_search.mp3')
         playsound.playsound('mp3/video_search.mp3')
 
-        word = speak_video(r)
+        word = speak_detail(r)
         print(word + '(이)란 주제로 유튜브 검색을 시작합니다.')
         get_videos.run_videos(word)
 
+    # 스포츠 검색
+    elif '스포츠' in keyword:
+        text = '스포츠를 검색합니다. 분야를 입력해주세요.'
+        print(text)
+        # get_tts(text, 'sports_search.mp3')
+        playsound.playsound('mp3/sports_search.mp3')
+
+        word = speak_detail(r)
+        print(word + ' 종목을 네이버 스포츠에서 검색합니다.')
+        sports.find_sports(word)
+
+    # 구글 검색
     elif 'Google' in keyword or '검색' in keyword:
         text = '검색어를 입력해주세요.'
         print(text)
         # get_tts(text, 'search.mp3')
         playsound.playsound('mp3/search.mp3')
 
-        word = speak_video(r)
+        word = speak_detail(r)
         print(word + '(이)란 주제로 구글 검색을 시작합니다.')
         search_google.google_search(word)
 
+    # 날씨 검색
+    elif ('오늘' in keyword or '내일' in keyword) and '날씨' in keyword:
+        weather.weather_days(keyword)
+
+    # 타이머 설정
     elif '타이머' in keyword:
         text = '타이머를 실행합니다.'
         print(text)
@@ -122,21 +143,19 @@ while True:
         playsound.playsound('mp3/timer.mp3')
 
         while True:
-            (hours, minutes) = get_valid_time()
-            print('타이머를 실행합니다. 실행시간:', str(hours) + '시간', str(minutes) + '분')
-            timer = hours * 60 * 60 + minutes * 60
-            
+            (hours, minutes, seconds) = get_valid_time()
+            print('타이머를 실행합니다. 실행시간:', str(hours) + '시간', str(minutes) + '분', str(seconds) + '초')
+            timer = hours * 60 * 60 + minutes * 60 + seconds
+
             if timer == 0:
                 beepsound()
-                print('0시간 0분은 불가능합니다. 다시 입력해주세요.')
+                print('0시간 0분 0초는 불가능합니다. 다시 입력해주세요.')
             else:
                 break
 
-        face_detection.face_detect()
+        face_detection.face_detect(timer)
 
-    elif '오늘' in keyword and '날씨' in keyword:
-        weather.weather_today()
-
+    # 프로그램 종료
     elif '종료' in keyword or '끝' in keyword:
         break
 
