@@ -18,12 +18,29 @@ def get_tts(text, filename):
     tts.save('mp3/' + filename)                                     # 변수 tts를 filename으로 저장 (fimename의 파일 형식은 .mp3)로 filename 대입시 꼭 붙일것
     time.sleep(1.5)                                                 # 저장시간을 고려한 대기시간 설정
 
+def start_turtle(r):
+    while True:
+        with sr.Microphone() as source:
+            print('거북이를 시작하려면 거북이 시작! 이라고 말해주세요')
+            audio = r.listen(source)
+
+        try:
+            start = r.recognize_google(audio, language='ko-KR')
+            print('음성 : ' + start)
+            return start
+
+        except sr.UnknownValueError:
+            print('음성을 다시 입력해주세요')
+
+        except:
+            print('알 수 없는 오류가 발생했습니다.')
+
 def speak(r):
     while True:
         with sr.Microphone() as source:
             print('원하시는 기능을 말해주세요')
             playsound.playsound('mp3/please_talk.mp3')
-            audio = r.listen(source, timeout=10)                   # 만약 timeout = 10초 간 음성의 입력이 없다면, WaitTimeoutError 예외 발생
+            audio = r.listen(source)
 
         try:
             keyword = r.recognize_google(audio, language='ko-KR')  # 음성을 구글 음성인식을 통해 text로 만듦
@@ -40,7 +57,7 @@ def speak_detail(r):
     while True:
         with sr.Microphone() as source:
             print('이제 검색어를 입력해주세요')
-            audio = r.listen(source, timeout=10)
+            audio = r.listen(source, timeout=10)                   # 만약 timeout = 10초 간 음성의 입력이 없다면, WaitTimeoutError 예외 발생
 
         try:
             word = r.recognize_google(audio, language='ko-KR')
@@ -77,15 +94,20 @@ def get_valid_time():
             print('다시 입력해주세요.')
 
 
-text = '안녕하세요 인공지능 비서입니다.'
+r = sr.Recognizer()
+
+while True:
+    start = start_turtle(r)
+    if '거북' in start or '어북' in start:
+        break
+
+text = '안녕하세요 인공지능 비서 거북이입니다.'
 print(text)
 # get_tts(text, 'welcome_secretary.mp3')                           # 만약 해당 파일을 실행한 폴더에 'welcome.secretary.mp3' 파일이 있다면 주석 처리. 이는 앞으로 나올 모든 get_tts 함수에 해당
 playsound.playsound('mp3/welcome_secretary.mp3')
 
 text = '원하시는 기능을 말해주세요.'
 # get_tts(text, 'please_talk.mp3')
-
-r = sr.Recognizer()
 
 while True:
     keyword = speak(r)
@@ -97,7 +119,7 @@ while True:
         # get_tts(text, 'music_search.mp3')
         playsound.playsound('mp3/music_search.mp3')
         get_musics.play_music()
-    
+
     # 동영상 검색
     elif '영상' in keyword and '틀어' in keyword:
         text = '동영상을 검색합니다. 검색어를 입력해주세요.'
@@ -121,7 +143,7 @@ while True:
         sports.find_sports(word)
 
     # 구글 검색
-    elif 'Google' in keyword or '검색' in keyword:
+    elif ('Google' in keyword or '검색' in keyword):
         text = '검색어를 입력해주세요.'
         print(text)
         # get_tts(text, 'search.mp3')
@@ -134,8 +156,8 @@ while True:
     # 날씨 검색
     elif ('오늘' in keyword or '내일' in keyword) and '날씨' in keyword:
         weather.weather_days(keyword)
-    
-    # 타이머 실행
+
+    # 타이머 설정
     elif '타이머' in keyword:
         text = '타이머를 실행합니다.'
         print(text)
@@ -154,12 +176,12 @@ while True:
                 break
 
         turtle_neck_classification.side_detect(timer)
-    
+
     # 프로그램 종료
     elif '종료' in keyword or '끝' in keyword:
         break
 
-text = '인공지능 비서가 종료됩니다. 이용해주셔서 감사합니다.'
+text = '거북이가 종료됩니다. 이용해주셔서 감사합니다.'
 print(text)
-# get_tts(text, 'byebye.mp3')
+get_tts(text, 'byebye.mp3')
 playsound.playsound('mp3/byebye.mp3')
