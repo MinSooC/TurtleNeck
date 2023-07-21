@@ -18,20 +18,25 @@ def weather_days(keyword):
         day_word = '오늘'
     elif '내일' in keyword:
         day_word = '내일'
-
+    
+    # 구글에서 day_word + 날씨 키워드로 검색
     url = "https://www.google.com/search?q="+ day_word +"날씨&sxsrf=AB5stBhWE2Kpz033hjTMs3lLOk9XuXntdQ%3A1689819319624&ei=t5i4ZLfUJevM1e8P9Y2fgAk&ved=0ahUKEwj3i5_Cm5yAAxVrZvUHHfXGB5AQ4dUDCA8&uact=5&oq=%EC%98%A4%EB%8A%98+%EB%82%A0%EC%94%A8&gs_lp=Egxnd3Mtd2l6LXNlcnAiDeyYpOuKmCDrgqDslKgyBhAAGAcYHjIGEAAYBxgeMgYQABgHGB4yBhAAGAcYHjIGEAAYBxgeMgYQABgHGB4yBhAAGAcYHjIGEAAYBxgeMgUQABiABDIGEAAYBxgeSMgMUNkHWMULcAJ4AZABAZgBhQGgAeIEqgEDMC41uAEDyAEA-AEBwgIKEAAYRxjWBBiwA-IDBBgAIEGIBgGQBgo&sclient=gws-wiz-serp"
     driver.get(url)
     time.sleep(1.5)
-
+    
+    # 장소
     place_element = driver.find_element(By.XPATH, "//span[@class = 'BBwThe']")
     place = place_element.text
-
+    
+    # 온도
     tem_element = driver.find_element(By.XPATH, "//span[@class = 'wob_t q8U8x']")
     temperature = tem_element.text
 
+    # 날씨
     wea_element = driver.find_element(By.XPATH, "//span[@id = 'wob_dc']")
     weather = wea_element.text
-
+    
+    # 뇌우나 강우 등을 누구나 알아들을 수 있게끔 변경
     if '동반' in weather:
         weather = '천둥, 번개를 동반한 많은 비'
     elif '광역성 뇌우' in weather:
@@ -40,10 +45,12 @@ def weather_days(keyword):
         weather = '소나기'
     else:
         pass
-
+    
+    # 강수 확률
     rain_element = driver.find_element(By.XPATH, "//span[@id = 'wob_pp']")
     rain = rain_element.text
-
+    
+    # 비가 올때만 강수 확률을 말하도록 함
     if '소나기' in weather or '비' in weather:
         text = f'{day_word} {place}의 날씨는 {weather}이며, 기온은 {temperature}도 입니다. 강수 확률은 {rain}입니다.'
         print(text)
