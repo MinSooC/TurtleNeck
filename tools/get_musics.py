@@ -17,6 +17,7 @@ def speak_stop(duration):
     timecheck = checktime
 
     while True:
+        # 만약 중간에 잡음 등으로 마이크가 인식되었다면 except 구문 실행 후 다시 처음부터 시간을 재기 때문에, 지나간 시간만큼 영상 길이에서 뺌
         timeout = duration - (timecheck - checktime)
 
         if timeout <= 0:
@@ -25,6 +26,7 @@ def speak_stop(duration):
         with sr.Microphone() as source:
             print('재생을 멈추시려면 이야기해주세요')
             try:
+                # 영상이 재생되는 내내 인식하게끔 함
                 audio = r.listen(source, timeout = timeout)
             except:
                 print('음악이 끝났습니다.')
@@ -39,6 +41,7 @@ def speak_stop(duration):
             elif '다음' in stopword:
                 return stopword
             else:
+                # 멈춰, 그만, 다음 이외의 단어들만 인식했다면 시간체크만 하고 다시 while문의 시작점으로 돌아감
                 timecheck = time.time()
                 pass
 
@@ -52,6 +55,7 @@ def speak_stop(duration):
 
 
 def play_music():
+    # 멜론 사이트에서 TOP 100 목록의 제목들만 긁어오기
     html = requests.get('https://www.melon.com/chart/index.htm', headers={'User-Agent': 'Mozilla/5.0'}).text
     bs = BeautifulSoup(html, 'html.parser')
     result = bs.find_all('div', class_='ellipsis rank01')
@@ -59,7 +63,8 @@ def play_music():
     keywords = []
     for temp in result:
         keywords.append(temp.find('a').text)
-
+    
+    # 음원들의 제목을 하나씩 받아서 유튜브에서 재생
     for keyword in keywords:
         while True:
             chrome_options = webdriver.ChromeOptions()
