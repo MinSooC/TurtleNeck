@@ -14,6 +14,7 @@ def speak_stop(duration):
     timecheck = checktime
 
     while True:
+        # 만약 중간에 잡음 등으로 마이크가 인식되었다면 except 구문 실행 후 다시 처음부터 시간을 재기 때문에, 지나간 시간만큼 영상길이에서 뺌
         timeout = duration - (timecheck - checktime)
 
         if timeout <= 0:
@@ -22,7 +23,8 @@ def speak_stop(duration):
         with sr.Microphone() as source:
             print('재생을 멈추시려면 이야기해주세요')
             try:
-                audio = r.listen(source, timeout=timeout)
+                # 영상이 재생되는 내내 인식하게끔 함
+                audio = r.listen(source, timeout = timeout)
             except:
                 print('영상이 끝났습니다.')
                 break
@@ -31,8 +33,6 @@ def speak_stop(duration):
             print('음성 : ' + stopword)
 
             if '멈춰' in stopword or '그만' in stopword:
-                return stopword
-            elif '다음' in stopword:
                 return stopword
             else:
                 timecheck = time.time()
@@ -78,7 +78,7 @@ def run_videos(keyword):
     time.sleep(2)
     print(keyword, '을/를 재생합니다.', '길이:', str(minutes) + '분', str(seconds) + '초')
 
-    # ↓ 키를 n번 입력시켜주는 코드
+    # ↓ 키를 n번 입력시켜주는 코드 : 기본설정인 음량 100에서 ↓키 1회 입력마다 5씩 줄어듦
     actions = ActionChains(driver)
     for _ in range(10):
         actions.send_keys(Keys.ARROW_DOWN)
@@ -93,8 +93,10 @@ def run_videos(keyword):
             pass
 
     stopword = speak_stop(duration - 3)
+    # 만약 '멈춰'나 '그만'이 음성에 포함되어있다면 영상 재생 기능을 종료
     if '멈춰' in keyword or '그만' in stopword:
         driver.quit()
         return
 
+    # 영상의 시간이 다 되면 크롬을 종료
     driver.quit()
