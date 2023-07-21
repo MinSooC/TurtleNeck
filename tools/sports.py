@@ -8,19 +8,20 @@ def find_sports(keyword):
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver.maximize_window()
 
-    if keyword == '한국 야구' or keyword == '야구':
+    # 스포츠 종목 별 검색, 야구와 축구의 경우 국내/해외 구분을 말하지 않으면 국내 야구/축구로 연결되도록 함
+    if '한국 야구' in keyword or keyword == '야구':
         sports = 'kbaseball'
-    elif keyword == '해외 야구':
+    elif '해외 야구' in keyword:
         sports = 'wbaseball'
-    elif keyword == '한국 축구' or keyword == '축구':
+    elif '한국 축구' in keyword or keyword == '축구':
         sports = 'kfootball'
-    elif keyword == '해외 축구':
+    elif '해외 축구' in keyword:
         sports = 'wfootball'
-    elif keyword == '농구':
+    elif '농구' in keyword:
         sports = 'basketball'
-    elif keyword == '배구':
+    elif '배구' in keyword:
         sports = 'volleyball'
-    elif keyword == '골프':
+    elif '골프' in keyword:
         sports = 'golf'
     else:
         sports = 'general'
