@@ -6,12 +6,18 @@ import playsound
 
 import get_musics
 import get_videos
-import search_google
+import news
 import sports
 import weather
+import maps
+import search_google
 
 import face_detection
 import winsound as sd
+import os
+import csv
+
+word_lst = []                                                       # 음성 데이터를 저장할 리스트 선언
 
 def get_tts(text, filename):
     tts = gTTS(text=text, lang='ko')                                # 변수 tts에 gTTS 코드를 저장, 음성 타입은 한국어
@@ -21,7 +27,7 @@ def get_tts(text, filename):
 def start_turtle(r):
     while True:
         with sr.Microphone() as source:
-            print('거북이를 시작하려면 거북이 시작! 이라고 말해주세요')
+            print('거북이를 시작하려면 거북이를 불러주세요')
             audio = r.listen(source)
 
         try:
@@ -45,6 +51,7 @@ def speak(r):
         try:
             keyword = r.recognize_google(audio, language='ko-KR')  # 음성을 구글 음성인식을 통해 text로 만듦
             print('음성 : ' + keyword)
+            word_lst.append(keyword)                               # 음성 데이터를 리스트에 저장
             return keyword                                         # 만약 음성을 인식했다면 구글 음성인식을 통해 text로 변환되어 저장된 keyword 변수를 리턴
 
         except sr.UnknownValueError:
@@ -62,6 +69,7 @@ def speak_detail(r):
         try:
             word = r.recognize_google(audio, language='ko-KR')
             print('음성 : ' + word)
+            word_lst.append(word)                                  # 음성 데이터를 리스트에 저장
             return word
 
         except sr.UnknownValueError:
@@ -98,7 +106,7 @@ r = sr.Recognizer()
 
 while True:
     start = start_turtle(r)
-    if '거북' in start or '어북' in start:
+    if '거북' in start or '어북' in start or '거부가' in start or '거부' in start:
         break
 
 text = '안녕하세요 인공지능 비서 거북이입니다.'
@@ -131,6 +139,17 @@ while True:
         print(word + '(이)란 주제로 유튜브 검색을 시작합니다.')
         get_videos.run_videos(word)
 
+    # 뉴스 검색
+    elif '뉴스' in keyword:
+        text = '뉴스를 검색합니다. 분야를 입력해주세요.'
+        print(text)
+        # get_tts(text, 'news_search.mp3')
+        playsound.playsound('mp3/news_search.mp3')
+
+        word = speak_detail(r)
+        print(word + '를 네이버 뉴스에서 검색합니다.')
+        news.find_news(word)
+
     # 스포츠 검색
     elif '스포츠' in keyword:
         text = '스포츠를 검색합니다. 분야를 입력해주세요.'
@@ -142,6 +161,21 @@ while True:
         print(word + ' 종목을 네이버 스포츠에서 검색합니다.')
         sports.find_sports(word)
 
+    # 날씨 검색
+    elif ('오늘' in keyword or '내일' in keyword) and '날씨' in keyword:
+        weather.weather_days(keyword)
+
+    # 지도 검색
+    elif '지도' in keyword or '위치' in keyword or '장소' in keyword:
+        text = '장소를 검색합니다. 위치를 입력해주세요.'
+        print(text)
+        # get_tts(text, 'map_search.mp3')
+        playsound.playsound('mp3/map_search.mp3')
+
+        word = speak_detail(r)
+        print(word + ' 위치를 구글 지도로 검색합니다.')
+        maps.map_search(word)
+
     # 구글 검색
     elif ('Google' in keyword or '검색' in keyword):
         text = '검색어를 입력해주세요.'
@@ -152,10 +186,6 @@ while True:
         word = speak_detail(r)
         print(word + '(이)란 주제로 구글 검색을 시작합니다.')
         search_google.google_search(word)
-
-    # 날씨 검색
-    elif ('오늘' in keyword or '내일' in keyword) and '날씨' in keyword:
-        weather.weather_days(keyword)
 
     # 타이머 설정
     elif '타이머' in keyword:
@@ -175,6 +205,7 @@ while True:
             else:
                 break
 
+        # 거북목 방지 함수 실행
         face_detection.face_detect(timer)
 
     # 프로그램 종료
@@ -183,5 +214,19 @@ while True:
 
 text = '거북이가 종료됩니다. 이용해주셔서 감사합니다.'
 print(text)
-get_tts(text, 'byebye.mp3')
+# get_tts(text, 'byebye.mp3')
 playsound.playsound('mp3/byebye.mp3')
+
+# 종료라는 단어는 마지막에 들어가므로 해당 요소를 삭제
+word_lst = word_lst[:-1]
+
+# 음성 데이터들을 파일로 저장
+if os.path.isfile('wordlist.csv'):
+    with open('wordlist.csv', 'a', newline = '') as f:
+        writer = csv.writer(f)
+        writer.writerow(word_lst)
+
+else:
+    with open('wordlist.csv', 'w', newline = '') as f:
+        writer = csv.writer(f)
+        writer.writerow(word_lst)
