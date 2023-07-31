@@ -49,7 +49,7 @@ def speak_stop(duration):
 def run_videos(keyword):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option('detach', True)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=chrome_options)
     driver.maximize_window()
 
     url = 'https://www.youtube.com/results?search_query={0}'.format(keyword)
