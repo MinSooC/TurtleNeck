@@ -11,7 +11,7 @@ import playsound
 def weather_days(keyword):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--headless')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=chrome_options)
     driver.maximize_window()
 
     if '오늘' in keyword:
