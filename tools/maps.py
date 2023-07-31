@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 def map_search(keyword):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option('detach', True)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=chrome_options)
     driver.maximize_window()
 
     # 구글 지도의 검색창에 keyword를 넣어서 검색 실시
