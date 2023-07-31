@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.service import Service
 def find_sports(keyword):
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_experimental_option('detach', True)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager(version="114.0.5735.90").install()), options=chrome_options)
     driver.maximize_window()
 
     # 스포츠 종목 별 검색, 야구와 축구의 경우 국내/해외 구분을 말하지 않으면 국내 야구/축구로 연결되도록 함
