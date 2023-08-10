@@ -2,4 +2,6 @@ pip install selenium
 pip install webdriver-manager
 pip install SpeechRecognition
 pip install playsound==1.2.0
+pip install gtts
 pip install mediapipe
+pip install pyaudio
