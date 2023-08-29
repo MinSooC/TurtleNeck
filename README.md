@@ -56,8 +56,9 @@
 1. 정면 거북목 인식 : Mediapipe
 2. 측면 거북목 인식 : CNN
 
+<br>
+이하 기능들은 전부 Selenium Web Driver 사용
 
-* 이하 기능들은 전부 Selenium Web Driver 사용
 ### ✅ 음악재생
 1. Melon의 Top100 순위를 crop해서 youtube 음원으로 자동으로 재생
 2. 음악 재생 중 중단 후 다음 음악, 혹은 아예 음악재생 기능 종료 기능 포함
