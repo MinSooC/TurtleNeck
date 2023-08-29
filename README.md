@@ -2,9 +2,11 @@
 ### ✅ 인공지능 비서 거북이 (메타버스 아카데미 7월 월말 프로젝트)
 
 # 📒 프로젝트 소개
-### ✅ Mediapipe와 CNN을 활용한 거북목 탐지와 Speech-Recognition을 통한 AI스피커를 개발하는 프로젝트입니다.
+### ✅ Mediapipe와 CNN을 활용한 거북목 탐지
+### ✅ Speech-Recognition을 통한 AI스피커를 개발하는 프로젝트입니다.
 
-주제선정 배경은 다음과 같습니다.
+<br>
+주제선정 배경은 다음과 같습니다. <br><br>
 
 ><img src="https://github.com/MinSooC/TurtleNeck/blob/main/tools/assets/%EA%B1%B0%EB%B6%81%EB%AA%A9%20%ED%99%98%EC%9E%90%20%EC%88%98.png?raw=true" height="360">
 
